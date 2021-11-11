@@ -4,6 +4,8 @@ import com.example.SpringExceptionHandling.dao.Student;
 import com.example.SpringExceptionHandling.exception.StudentNotFoundException;
 import com.example.SpringExceptionHandling.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,17 +17,22 @@ public class StudentController {
     StudentService studentService;
 
     @GetMapping("/students")
-    public List<Student> getStudents(){
-        return studentService.getStudentsDetails();
+    public ResponseEntity<List<Student>> getStudents(){
+        List<Student> studentList = studentService.getStudentsDetails();
+        if(studentList.size() == 0){
+            throw new StudentNotFoundException("No records available");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(studentList);
     }
 
     @GetMapping("/students/{id}")
-    public Student getStudentsById(@PathVariable Long id){
+    public ResponseEntity<Student> getStudentsById(@PathVariable Long id){
         Student student = studentService.getStudentDetailsById(id);
         if(student==null){
             throw new StudentNotFoundException("Id is not available :" + id);
+            //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
         }
-        return student;
+        return ResponseEntity.status(HttpStatus.OK).body(student);
 
     }
 
