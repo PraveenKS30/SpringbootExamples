@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Student {
     private String name;
-    private Long id;
-    private Long score;
+    private int id;
+    private int score;
 }
